@@ -2,6 +2,7 @@
 
 import handleCheckedFunc from "../actions/handleCheck";
 import IncEssentialItem from "../actions/IncrementEssentialItem";
+import DecEssentialItem from "../actions/DecreaseEssentialItem";
 import { GroceryItem, EssentialItem } from "@/app/types/types";
 
 export function GroceryDisplay(props: {
@@ -29,8 +30,20 @@ export function GroceryDisplay(props: {
     }
   }
 
+  async function DecItem(item: EssentialItem) {
+    let newQuant = item.quantity - 1;
+    if (newQuant < 1) {
+      newQuant = 0;
+    }
+    try {
+      await DecEssentialItem(item, newQuant);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
-    <div className="flex flex-col px-6 mx-auto  p-4 max-w-md ">
+    <div className="flex flex-col px-6 mx-auto p-4 max-w-md">
       <div className="overflow-x-auto">
         <p>Essential Items</p>
         <table className="table">
@@ -46,12 +59,18 @@ export function GroceryDisplay(props: {
               <tr key={idx}>
                 <td>{essent.name}</td>
                 <td>{essent.quantity}</td>
-                <td>
+                <td className="flex flex-col gap-2 ">
                   <button
                     onClick={() => IncItem(essent)}
                     className="btn btn-success"
                   >
                     increase amount
+                  </button>
+                  <button
+                    onClick={() => DecItem(essent)}
+                    className="btn btn-error"
+                  >
+                    decrease amount
                   </button>
                 </td>
               </tr>
